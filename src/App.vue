@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-09-23 13:55:32
+ * @LastEditTime: 2021-09-23 15:55:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/App.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <form action=" ">
+    <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">邮箱</label>
         <validate-input
@@ -17,18 +17,22 @@
           v-model="emailVal"
           placeholder="请输入一个邮箱"
           type="text"
+          ref="inputRef"
         ></validate-input>
       </div>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">密码</label>
         <validate-input
-          :rules="emailRules"
-          v-model="emailVal"
+          :rules="passwordRules"
+          v-model="passwordVal"
           placeholder="请输入密码"
           type="text"
         ></validate-input>
       </div>
-    </form>
+      <template #submit>
+        <span class="btn btn-danger">Submit</span>
+      </template>
+    </validate-form>
   </div>
 </template>
 
@@ -38,6 +42,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
 import ValidateInput, { RulesProp } from './components/ValidateInput.vue'
+import ValidateForm from './components/ValidateForm.vue'
 const testData: ColumnProps[] = [
   {
     id: 1,
@@ -60,10 +65,13 @@ export default defineComponent({
   components: {
     // ColumnList,
     GlobalHeader,
-    ValidateInput
+    ValidateInput,
+    ValidateForm
   },
   setup () {
-    const emailVal = ref('viking')
+    const inputRef = ref<any>()
+    // 邮箱验证
+    const emailVal = ref('123@test.com')
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
@@ -73,16 +81,25 @@ export default defineComponent({
       error: false,
       message: ''
     })
+    // 密码验证
+    const passwordVal = ref('123')
+    const passwordRules: RulesProp = [
+      { type: 'required', message: '密码不能为空' }
+    ]
+    const onFormSubmit = (result: boolean) => {
+      console.log('result', result)
+    }
     return {
       list: testData,
-      currentUser: currentUser,
+      currentUser,
       emailRef,
       emailRules,
-      emailVal
+      emailVal,
+      passwordRules,
+      passwordVal,
+      onFormSubmit,
+      inputRef
     }
   }
 })
 </script>
-
-<style>
-</style>

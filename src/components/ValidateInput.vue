@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 14:54:56
- * @LastEditTime: 2021-09-23 13:51:16
+ * @LastEditTime: 2021-09-23 15:42:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ValidateInput.vue
@@ -21,7 +21,8 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, reactive, PropType } from 'vue'
+import { defineComponent, reactive, PropType, onMounted } from 'vue'
+import { emitter } from './ValidateForm.vue'
 const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 interface RuleProp {
   type: 'required' | 'email'
@@ -64,8 +65,13 @@ export default defineComponent({
           return passed
         })
         inputRef.error = !allPassed
+        return allPassed
       }
+      return true
     }
+    onMounted(() => {
+      emitter.emit('form-item-created', validateInput)
+    })
     return {
       inputRef,
       validateInput,
