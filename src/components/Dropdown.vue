@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-19 15:12:34
- * @LastEditTime: 2021-09-19 16:18:22
+ * @LastEditTime: 2021-09-22 14:06:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/Dropdown.vue
@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang='ts'>
-import { defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import useClickOutside from '@/hooks/useClickOutside'
 export default defineComponent({
   name: 'Dropdown',
