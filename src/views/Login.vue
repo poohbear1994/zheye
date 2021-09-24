@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-09-24 12:48:14
+ * @LastEditTime: 2021-09-24 16:35:20
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /zheye/src/views/Login.vue
+-->
 <template>
   <div class="login-page">
     <validate-form @form-submit="onFormSubmit">
@@ -25,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
 
@@ -36,6 +45,7 @@ export default defineComponent({
   },
   setup () {
     const emailVal = ref('')
+    const router = useRouter()
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
@@ -46,6 +56,11 @@ export default defineComponent({
     ]
     const onFormSubmit = (result: boolean) => {
       console.log('result', result)
+      if (result) {
+        router.push({
+          name: 'home'
+        })
+      }
     }
     return {
       emailRules,

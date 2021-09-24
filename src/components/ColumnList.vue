@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-17 21:31:22
- * @LastEditTime: 2021-09-18 15:45:20
+ * @LastEditTime: 2021-09-24 16:25:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ColumnList.vue
@@ -14,7 +14,7 @@
           <img :src="column.avatar" class="rounded-circle border border-light w-25 my-3" :alt="column.title">
           <h5 class="card-title">{{column.title}}</h5>
           <p class="card-text text-left">{{column.description}}</p>
-          <a href="#" class="btn btn-outline-primary">进入专栏</a>
+          <router-link :to="{name: 'column', params: {id: column.id}}" class="btn btn-outline-primary">进入专栏</router-link>
         </div>
       </div>
     </div>
