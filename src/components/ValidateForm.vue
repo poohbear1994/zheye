@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-23 14:17:57
- * @LastEditTime: 2021-09-23 15:58:19
+ * @LastEditTime: 2021-09-24 12:46:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ValidateForm.vue
@@ -29,7 +29,9 @@ export default defineComponent({
   setup (props, context) {
     let funcArr: ValidateFunc[] = []
     const submitForm = () => {
-      const result = funcArr.map(func => func()).every(result => result)
+      const result = funcArr.map((func) => {
+        return func()
+      }).every(result => result)
       context.emit('form-submit', result)
     }
     const callback = (func: ValidateFunc) => {

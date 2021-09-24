@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-09-23 15:55:57
+ * @LastEditTime: 2021-09-24 13:11:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/App.vue
@@ -9,96 +9,36 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <validate-form @form-submit="onFormSubmit">
-      <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">邮箱</label>
-        <validate-input
-          :rules="emailRules"
-          v-model="emailVal"
-          placeholder="请输入一个邮箱"
-          type="text"
-          ref="inputRef"
-        ></validate-input>
-      </div>
-      <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">密码</label>
-        <validate-input
-          :rules="passwordRules"
-          v-model="passwordVal"
-          placeholder="请输入密码"
-          type="text"
-        ></validate-input>
-      </div>
-      <template #submit>
-        <span class="btn btn-danger">Submit</span>
-      </template>
-    </validate-form>
+    <login></login>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
-import ValidateInput, { RulesProp } from './components/ValidateInput.vue'
-import ValidateForm from './components/ValidateForm.vue'
-const testData: ColumnProps[] = [
-  {
-    id: 1,
-    title: 'test1的专栏',
-    description: '1111111111111'
-  },
-  {
-    id: 2,
-    title: 'test2的专栏',
-    description: '22222222222222'
-  }
-]
+import Home from './views/Home.vue'
+import Login from './views/Login.vue'
 const currentUser: UserProps = {
   isLogin: true,
-  name: 'ljx',
-  id: 1
+  name: 'ljx'
 }
 export default defineComponent({
   name: 'App',
   components: {
-    // ColumnList,
     GlobalHeader,
-    ValidateInput,
-    ValidateForm
+    // Home,
+    Login
   },
   setup () {
     const inputRef = ref<any>()
-    // 邮箱验证
-    const emailVal = ref('123@test.com')
-    const emailRules: RulesProp = [
-      { type: 'required', message: '电子邮箱地址不能为空' },
-      { type: 'email', message: '请输入正确的电子邮箱格式' }
-    ]
-    const emailRef = reactive({
-      val: '',
-      error: false,
-      message: ''
-    })
-    // 密码验证
-    const passwordVal = ref('123')
-    const passwordRules: RulesProp = [
-      { type: 'required', message: '密码不能为空' }
-    ]
     const onFormSubmit = (result: boolean) => {
       console.log('result', result)
     }
     return {
-      list: testData,
-      currentUser,
-      emailRef,
-      emailRules,
-      emailVal,
-      passwordRules,
-      passwordVal,
       onFormSubmit,
-      inputRef
+      inputRef,
+      currentUser
     }
   }
 })
