@@ -1,39 +1,17 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-09-24 16:22:53
+ * @LastEditTime: 2021-09-26 14:01:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/main.ts
  */
-import { createApp } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
-import Home from './views/Home.vue'
-import Login from './views/Login.vue'
-import ColumnDetail from './views/ColumnDetail.vue'
+import { createApp } from 'vue'
+import store from './store'
+import router from './router'
 
-const routerHistory = createWebHistory()
-const router = createRouter({
-  history: routerHistory,
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/column/:id',
-      name: 'column',
-      component: ColumnDetail
-    }
-  ]
-})
 const app = createApp(App)
 app.use(router)
+app.use(store)
 app.mount('#app')

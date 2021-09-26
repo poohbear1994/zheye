@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:14
- * @LastEditTime: 2021-09-24 16:35:20
+ * @LastEditTime: 2021-09-26 14:27:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Login.vue
@@ -34,6 +34,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from './store'
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
 
@@ -46,6 +48,7 @@ export default defineComponent({
   setup () {
     const emailVal = ref('')
     const router = useRouter()
+    const store = useStore<GlobalDataProps>()
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
@@ -57,6 +60,7 @@ export default defineComponent({
     const onFormSubmit = (result: boolean) => {
       console.log('result', result)
       if (result) {
+        store.commit('login')
         router.push({
           name: 'home'
         })

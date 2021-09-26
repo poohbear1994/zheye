@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:06
- * @LastEditTime: 2021-09-24 12:52:25
+ * @LastEditTime: 2021-09-26 14:09:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Home.vue
@@ -25,8 +25,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { testData } from '../testData'
+import { defineComponent, computed } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
 export default defineComponent({
   name: 'Home',
@@ -34,8 +35,10 @@ export default defineComponent({
     ColumnList
   },
   setup () {
+    const store = useStore<GlobalDataProps>()
+    const list = computed(() => store.state.columns)
     return {
-      list: testData
+      list
     }
   }
 })

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 16:07:31
- * @LastEditTime: 2021-09-24 16:51:16
+ * @LastEditTime: 2021-09-26 14:52:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ColumnDetail.vue
@@ -23,9 +23,10 @@
 
 <script lang="ts">
 
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { testData, testPosts } from '../testData'
+import { GlobalDataProps } from '../store'
+import { useStore } from 'vuex'
 import PostList from '../components/PostList.vue'
 
 export default defineComponent({
@@ -35,9 +36,10 @@ export default defineComponent({
   },
   setup () {
     const route = useRoute()
+    const store = useStore<GlobalDataProps>()
     const currentId = +route.params.id
-    const column = testData.find(c => c.id === currentId)
-    const list = testPosts.filter(post => post.columnId === currentId)
+    const column = store.getters.getColumnById(currentId)
+    const list = store.getters.getPostsByCid(currentId)
     return {
       column,
       list
