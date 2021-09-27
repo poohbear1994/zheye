@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 16:07:31
- * @LastEditTime: 2021-09-26 14:52:43
+ * @LastEditTime: 2021-09-27 12:19:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ColumnDetail.vue
@@ -23,7 +23,7 @@
 
 <script lang="ts">
 
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import { GlobalDataProps } from '../store'
 import { useStore } from 'vuex'

@@ -1,20 +1,32 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 14:54:56
- * @LastEditTime: 2021-09-23 15:42:33
+ * @LastEditTime: 2021-09-27 12:53:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ValidateInput.vue
 -->
 <template>
   <div class="validate-input-container pb-3">
-    <input type="text"
+    <input
+      v-if="tag !=='textarea'"
       class="form-control"
       :class="{'is-invalid': inputRef.error}"
       :value="inputRef.val"
       @blur="validateInput"
       @input="updateValue"
       :="$attrs"
+      type="text"
+    />
+    <textarea
+      v-else
+      class="form-control"
+      :class="{'is-invalid': inputRef.error}"
+      :value="inputRef.val"
+      @blur="validateInput"
+      @input="updateValue"
+      :="$attrs"
+      type="text"
     />
     <span v-if="inputRef.error" class="invalid-feedback">{{inputRef.message}}</span>
   </div>
@@ -29,10 +41,14 @@ interface RuleProp {
   message: string
 }
 export type RulesProp = RuleProp[]
+export type TagType = 'input' | 'textarea'
 export default defineComponent({
   props: {
     rules: Array as PropType<RulesProp>,
-    modelValue: String
+    modelValue: String,
+    tag: {
+      type: String as PropType<TagType>
+    }
   },
   inheritAttrs: false,
   setup (props, context) {
