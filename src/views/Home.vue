@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:06
- * @LastEditTime: 2021-09-26 14:09:23
+ * @LastEditTime: 2021-09-29 14:18:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Home.vue
@@ -14,7 +14,7 @@
           <img src="../assets/callout.svg" alt="callout" class="w-50"/>
           <h2 class="font-weight-light">随心写作，自由表达</h2>
           <p>
-            <a href="#" class="btn btn-primary my-2">开始写文章</a>
+            <router-link to="/create" class="btn btn-primary my-2">开始写文章</router-link>
           </p>
         </div>
       </div>

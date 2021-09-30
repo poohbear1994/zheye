@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-09-27 12:43:39
+ * @LastEditTime: 2021-09-29 14:48:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -24,11 +24,11 @@ const store = createStore<GlobalDataProps>({
   state: {
     columns: testData,
     posts: testPosts,
-    user: { isLogin: false, columnId: 1, name: 'viking' }
+    user: { isLogin: true, name: '请先登录' }
   },
   mutations: {
     login (state) {
-      state.user = { ...state.user, isLogin: true, name: 'viking' }
+      state.user = { ...state.user, columnId: 1, isLogin: true, name: 'viking' }
     },
     createPost (state, newPost) {
       state.posts.push(newPost)
