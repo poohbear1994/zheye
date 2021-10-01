@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-10-01 22:06:10
+ * @LastEditTime: 2021-10-01 22:43:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/App.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <h1 v-if="isLoading">正在读取数据。。。</h1>
+    <loader v-if="isLoading" text="拼命加载中" background="rgba(0, 0, 0, 0.8)"></loader>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -31,11 +31,13 @@ import { useStore } from 'vuex'
 import { GlobalDataProps } from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
+import Loader from './components/Loader.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
-    GlobalHeader
+    GlobalHeader,
+    Loader
   },
   setup () {
     const store = useStore<GlobalDataProps>()
