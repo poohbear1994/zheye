@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-27 11:59:41
- * @LastEditTime: 2021-09-27 12:48:15
+ * @LastEditTime: 2021-10-01 16:26:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/CreatePost.vue
@@ -67,10 +67,10 @@ export default defineComponent({
         const { columnId } = store.state.user
         if (columnId) {
           const newPost: PostProps = {
-            id: new Date().getTime(),
+            _id: new Date().getTime() + '',
             title: titleVal.value,
             content: contentVal.value,
-            columnId,
+            column: columnId + '',
             createdAt: new Date().toLocaleString()
           }
           store.commit('createPost', newPost)

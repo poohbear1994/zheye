@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:54:26
- * @LastEditTime: 2021-09-29 14:47:07
+ * @LastEditTime: 2021-10-01 15:34:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/router.ts
@@ -48,7 +48,6 @@ const router = createRouter({
 
 // 添加路由守卫
 router.beforeEach((to, from, next) => {
-  console.log(store.state.user)
   if (!store.state.user.isLogin && to.meta.requiredLogin) {
     next({
       name: 'login'

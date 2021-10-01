@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 16:07:31
- * @LastEditTime: 2021-09-27 12:19:11
+ * @LastEditTime: 2021-10-01 16:50:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ColumnDetail.vue
@@ -10,7 +10,7 @@
    <div class="column-detail-page w-75 mx-auto">
     <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
       <div class="col-3 text-center">
-        <img :src="column.avatar" :alt="column.title" class="rounded-circle border ">
+        <img :src="column.avatar && column.avatar.url" :alt="column.title" class="rounded-circle border w-100">
       </div>
       <div class="col-9">
         <h4>{{column.title}}</h4>
@@ -23,7 +23,7 @@
 
 <script lang="ts">
 
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { GlobalDataProps } from '../store'
 import { useStore } from 'vuex'
@@ -37,9 +37,17 @@ export default defineComponent({
   setup () {
     const route = useRoute()
     const store = useStore<GlobalDataProps>()
-    const currentId = +route.params.id
-    const column = store.getters.getColumnById(currentId)
-    const list = store.getters.getPostsByCid(currentId)
+    const currentId = route.params.id
+    onMounted(() => {
+      store.dispatch('fetchColumn', currentId)
+      store.dispatch('fetchPosts', currentId)
+    })
+    const column = computed(() => {
+      return store.getters.getColumnById(currentId)
+    })
+    const list = computed(() => {
+      return store.getters.getPostsByCid(currentId)
+    })
     return {
       column,
       list
