@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-09-26 14:32:15
+ * @LastEditTime: 2021-10-01 22:06:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/App.vue
@@ -9,6 +9,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
+    <h1 v-if="isLoading">正在读取数据。。。</h1>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -39,8 +40,10 @@ export default defineComponent({
   setup () {
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
+    const isLoading = computed(() => store.state.loading)
     return {
-      currentUser
+      currentUser,
+      isLoading
     }
   }
 })

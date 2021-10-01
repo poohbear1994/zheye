@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-09-30 22:53:37
+ * @LastEditTime: 2021-10-01 22:11:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/main.ts
@@ -13,10 +13,15 @@ import router from './router'
 import axios from 'axios'
 axios.defaults.baseURL = 'http://apis.imooc.com/api/'
 axios.interceptors.request.use(config => {
+  store.commit('setLoading', true)
   config.params = {
     ...config.params,
     icode: '046210061C9D5DAC'
   }
+  return config
+})
+axios.interceptors.response.use(config => {
+  store.commit('setLoading', false)
   return config
 })
 
