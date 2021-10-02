@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-27 11:59:41
- * @LastEditTime: 2021-10-01 16:26:26
+ * @LastEditTime: 2021-10-02 20:46:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/CreatePost.vue
@@ -64,20 +64,20 @@ export default defineComponent({
     ]
     const onFormSubmit = (result: boolean) => {
       if (result) {
-        const { columnId } = store.state.user
-        if (columnId) {
+        const { column } = store.state.user
+        if (column) {
           const newPost: PostProps = {
             _id: new Date().getTime() + '',
             title: titleVal.value,
             content: contentVal.value,
-            column: columnId + '',
+            column: column,
             createdAt: new Date().toLocaleString()
           }
           store.commit('createPost', newPost)
           router.push({
             name: 'column',
             params: {
-              id: columnId
+              id: column
             }
           })
         }

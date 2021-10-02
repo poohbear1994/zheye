@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-10-01 22:43:52
+ * @LastEditTime: 2021-10-02 20:51:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/App.vue
@@ -30,7 +30,7 @@ import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
+import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from './components/Loader.vue'
 
 export default defineComponent({
