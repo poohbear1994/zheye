@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-02 20:50:22
+ * @LastEditTime: 2021-10-02 21:23:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -59,7 +59,7 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
 
 const store = createStore<GlobalDataProps>({
   state: {
-    token: '',
+    token: localStorage.getItem('token') || '',
     loading: false,
     columns: [],
     posts: [],
@@ -95,6 +95,7 @@ const store = createStore<GlobalDataProps>({
     login (state, rawData) {
       const { token } = rawData.data
       state.token = token
+      localStorage.setItem('token', token)
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
     }
   },
