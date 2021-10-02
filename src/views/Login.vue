@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:14
- * @LastEditTime: 2021-09-26 14:55:13
+ * @LastEditTime: 2021-10-02 19:41:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Login.vue
@@ -58,11 +58,14 @@ export default defineComponent({
       { type: 'required', message: '密码不能为空' }
     ]
     const onFormSubmit = (result: boolean) => {
-      console.log('result', result)
       if (result) {
-        store.commit('login')
-        router.push({
-          name: 'home'
+        const payload = {
+          email: emailVal.value,
+          password: passwordVal.value
+        }
+        store.dispatch('login', payload).then(data => {
+          console.log(data)
+          router.push('/')
         })
       }
     }
