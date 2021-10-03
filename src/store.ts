@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-03 10:21:08
+ * @LastEditTime: 2021-10-03 18:20:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -29,12 +29,12 @@ export interface ColumnProps {
   description: string;
 }
 export interface PostProps {
-  _id: string;
+  _id?: string;
   title: string;
   excerpt?: string;
   content?: string;
   image?: ImageProps;
-  createdAt: string;
+  createdAt?: string;
   column: string;
 }
 

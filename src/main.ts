@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-10-03 12:09:13
+ * @LastEditTime: 2021-10-03 18:12:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/main.ts
@@ -19,9 +19,13 @@ axios.interceptors.request.use(config => {
     ...config.params,
     icode: '046210061C9D5DAC'
   }
-  config.data = {
-    ...config.data,
-    icode: '046210061C9D5DAC'
+  if (config.data instanceof FormData) {
+    config.data.append('icode', '046210061C9D5DAC')
+  } else {
+    config.data = {
+      ...config.data,
+      icode: '046210061C9D5DAC'
+    }
   }
   return config
 })
