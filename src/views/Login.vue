@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:14
- * @LastEditTime: 2021-10-02 20:42:31
+ * @LastEditTime: 2021-10-03 10:31:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Login.vue
@@ -66,6 +66,8 @@ export default defineComponent({
         store.dispatch('loginAndFetch', payload).then(data => {
           console.log(data)
           router.push('/')
+        }).catch(e => {
+          console.log(e)
         })
       }
     }

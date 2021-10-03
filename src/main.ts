@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-10-02 19:59:12
+ * @LastEditTime: 2021-10-03 10:29:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/main.ts
@@ -27,6 +27,11 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(config => {
   store.commit('setLoading', false)
   return config
+}, e => {
+  const { error } = e.response.data
+  store.commit('setError', error)
+  store.commit('setLoading', false)
+  return Promise.reject(error)
 })
 
 const app = createApp(App)
