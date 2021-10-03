@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-22 14:54:56
- * @LastEditTime: 2021-09-27 12:53:10
+ * @LastEditTime: 2021-10-03 16:56:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ValidateInput.vue
@@ -37,8 +37,9 @@ import { defineComponent, reactive, PropType, onMounted } from 'vue'
 import { emitter } from './ValidateForm.vue'
 const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 interface RuleProp {
-  type: 'required' | 'email'
+  type: 'required' | 'email' | 'custom'
   message: string
+  validator?: () => boolean
 }
 export type RulesProp = RuleProp[]
 export type TagType = 'input' | 'textarea'
@@ -74,6 +75,9 @@ export default defineComponent({
               break
             case 'email':
               passed = emailReg.test(inputRef.val)
+              break
+            case 'custom':
+              passed = rule.validator ? rule.validator() : true
               break
             default:
               break
