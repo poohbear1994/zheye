@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:14
- * @LastEditTime: 2021-10-03 10:31:01
+ * @LastEditTime: 2021-10-03 12:11:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Login.vue
@@ -38,6 +38,7 @@ import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store'
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
+import createMessage from '../components/createMessage'
 
 export default defineComponent({
   name: 'Login',
@@ -65,6 +66,7 @@ export default defineComponent({
         }
         store.dispatch('loginAndFetch', payload).then(data => {
           console.log(data)
+          createMessage('登录成功！随后跳转到首页', 'success')
           router.push('/')
         }).catch(e => {
           console.log(e)
