@@ -1,13 +1,19 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-03 18:20:13
+ * @LastEditTime: 2021-10-03 23:00:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
  */
 import { createStore, Commit } from 'vuex'
 import axios from 'axios'
+
+export interface ResponseType<P=Record<string, unknown>> {
+  code: number;
+  msg: string;
+  data: P;
+}
 export interface UserProps {
   isLogin: boolean;
   nickName?: string;
@@ -16,7 +22,7 @@ export interface UserProps {
   email?: string;
 }
 
-interface ImageProps {
+export interface ImageProps {
   _id?: string;
   url?: string;
   createdAt?: string;
