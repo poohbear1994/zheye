@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-10-02 21:22:06
+ * @LastEditTime: 2021-10-03 11:37:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/App.vue
@@ -10,6 +10,7 @@
   <div class="container">
     <global-header :user="currentUser"></global-header>
     <loader v-if="isLoading" text="拼命加载中" background="rgba(0, 0, 0, 0.8)"></loader>
+    <message type="error" :message="error.message" v-if="error.status"></message>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -33,17 +34,20 @@ import { GlobalDataProps } from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from './components/Loader.vue'
+import Message from './components/Message.vue'
 export default defineComponent({
   name: 'App',
   components: {
     GlobalHeader,
-    Loader
+    Loader,
+    Message
   },
   setup () {
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
     const isLoading = computed(() => store.state.loading)
     const token = computed(() => store.state.token)
+    const error = computed(() => store.state.error)
     onMounted(() => {
       if (!currentUser.value.isLogin && token.value) {
         axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
@@ -52,7 +56,8 @@ export default defineComponent({
     })
     return {
       currentUser,
-      isLoading
+      isLoading,
+      error
     }
   }
 })

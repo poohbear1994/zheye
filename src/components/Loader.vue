@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-01 22:24:31
- * @LastEditTime: 2021-10-01 22:52:46
+ * @LastEditTime: 2021-10-03 11:21:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/Loader.vue
@@ -21,7 +21,8 @@
   </teleport>
 </template>
 <script lang='ts'>
-import { defineComponent, onUnmounted } from 'vue'
+import { defineComponent } from 'vue'
+import useDOMCreate from '../hooks/useDOMCreate'
 export default defineComponent({
   props: {
     text: {
@@ -32,12 +33,7 @@ export default defineComponent({
     }
   },
   setup () {
-    const node = document.createElement('div')
-    node.id = 'back'
-    document.body.appendChild(node)
-    onUnmounted(() => {
-      document.body.removeChild(node)
-    })
+    useDOMCreate('back')
   }
 })
 </script>

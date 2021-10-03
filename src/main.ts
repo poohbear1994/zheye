@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 15:05:47
- * @LastEditTime: 2021-10-03 10:29:04
+ * @LastEditTime: 2021-10-03 11:37:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/main.ts
@@ -29,7 +29,7 @@ axios.interceptors.response.use(config => {
   return config
 }, e => {
   const { error } = e.response.data
-  store.commit('setError', error)
+  store.commit('setError', { status: true, message: error })
   store.commit('setLoading', false)
   return Promise.reject(error)
 })
