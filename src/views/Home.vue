@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:06
- * @LastEditTime: 2021-10-03 23:06:59
+ * @LastEditTime: 2021-10-03 23:20:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Home.vue
@@ -19,10 +19,10 @@
         </div>
       </div>
     </section>
-    <uploader action="/upload"
-      :beforeUpload='beforeUpload'
-      @file-uploaded='onFileUploaded'
-    >
+    <uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUploaded">
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" width="500" />
+      </template>
     </uploader>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
