@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 16:07:31
- * @LastEditTime: 2021-10-01 16:50:16
+ * @LastEditTime: 2021-10-04 23:16:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ColumnDetail.vue
@@ -25,9 +25,10 @@
 
 import { defineComponent, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { GlobalDataProps } from '../store'
+import { GlobalDataProps, ColumnProps } from '../store'
 import { useStore } from 'vuex'
 import PostList from '../components/PostList.vue'
+import { addColumnAvatar } from '../helper'
 
 export default defineComponent({
   name: 'ColumnDetail',
@@ -43,7 +44,11 @@ export default defineComponent({
       store.dispatch('fetchPosts', currentId)
     })
     const column = computed(() => {
-      return store.getters.getColumnById(currentId)
+      const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined
+      if (selectColumn) {
+        addColumnAvatar(selectColumn, 100, 100)
+      }
+      return selectColumn
     })
     const list = computed(() => {
       return store.getters.getPostsByCid(currentId)

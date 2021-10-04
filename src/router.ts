@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:54:26
- * @LastEditTime: 2021-10-04 12:33:39
+ * @LastEditTime: 2021-10-04 23:21:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/router.ts
@@ -12,6 +12,7 @@ import Login from './views/Login.vue'
 import ColumnDetail from './views/ColumnDetail.vue'
 import CreatePost from './views/CreatePost.vue'
 import Signup from './views/Signup.vue'
+import PostDetail from './views/PostDetail.vue'
 import store from './store'
 import axios from 'axios'
 
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/column/:id',
       name: 'column',
       component: ColumnDetail
+    },
+    {
+      path: '/posts/:id',
+      name: 'post',
+      component: PostDetail
     },
     {
       path: '/create',

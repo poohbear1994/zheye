@@ -1,27 +1,38 @@
 /*
  * @Author: your name
  * @Date: 2021-10-04 13:24:30
- * @LastEditTime: 2021-10-04 13:56:35
+ * @LastEditTime: 2021-10-04 23:33:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/helper.ts
  */
-import { ColumnProps } from './store'
-export function generateFitUrl (column: ColumnProps, width: number, height: number) {
-  if (column.avatar) {
-    column.avatar.fitUrl = column.avatar.url + `?x-oss-process=image/resize,m_pad,h_${height},w_${width}`
-  } else {
-    column.avatar = {
-      fitUrl: require('@/assets/column.png')
-    }
+import { ColumnProps, ImageProps, UserProps } from './store'
+
+export function generateFitUrl (data: ImageProps, width: number, height: number, format = ['m_pad']) {
+  if (data && data.url) {
+    const formatStr = format.reduce((prev, current) => {
+      return current + ',' + prev
+    }, '')
+    data.fitUrl = data.url + `?x-oss-process=image/resize,${formatStr}h_${height},w_${width}`
   }
 }
 
+export function addColumnAvatar (data: ColumnProps | UserProps, width: number, height: number) {
+  if (data.avatar) {
+    generateFitUrl(data.avatar, width, height)
+  } else {
+    const parseCol = data as ColumnProps
+    data.avatar = {
+      fitUrl: require(parseCol.title ? '@/assets/column.png' : '@/assets/avatar.jpeg')
+    }
+  }
+}
 interface CheckCondition {
   format?: string[];
   size?: number;
 }
 type ErrorType = 'size' | 'format' | null
+
 export function beforeUploadCheck (file: File, condition: CheckCondition) {
   const { format, size } = condition
   const isValidFormat = format ? format.includes(file.type) : true
