@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:06
- * @LastEditTime: 2021-10-03 23:20:19
+ * @LastEditTime: 2021-10-04 13:07:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Home.vue
@@ -19,11 +19,6 @@
         </div>
       </div>
     </section>
-    <uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUploaded">
-      <template #uploaded="dataProps">
-        <img :src="dataProps.uploadedData.data.url" width="500" />
-      </template>
-    </uploader>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
   </div>
@@ -32,15 +27,12 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { GlobalDataProps, ResponseType, ImageProps } from '../store'
+import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
-import Uploader from '../components/Uploader.vue'
-import createMessage from '../components/createMessage'
 export default defineComponent({
   name: 'Home',
   components: {
-    ColumnList,
-    Uploader
+    ColumnList
   },
   setup () {
     const store = useStore<GlobalDataProps>()
@@ -48,20 +40,8 @@ export default defineComponent({
     onMounted(() => {
       store.dispatch('fetchColumns')
     })
-    const beforeUpload = (file: File) => {
-      const isJPG = file.type === 'image/jpeg'
-      if (!isJPG) {
-        createMessage('上传图片只能时JPG格式！', 'error')
-      }
-      return isJPG
-    }
-    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
-      createMessage(`上传图片ID ${rawData.data._id}`, 'success')
-    }
     return {
-      list,
-      beforeUpload,
-      onFileUploaded
+      list
     }
   }
 })

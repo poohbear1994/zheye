@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:54:26
- * @LastEditTime: 2021-10-04 11:34:42
+ * @LastEditTime: 2021-10-04 12:33:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/router.ts
@@ -71,7 +71,7 @@ router.beforeEach((to, from, next) => {
         }
       }).catch((e) => {
         console.error(e)
-        localStorage.removeItem('token')
+        store.commit('logout')
         next('login')
       })
     } else {
