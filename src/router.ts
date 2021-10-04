@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:54:26
- * @LastEditTime: 2021-10-03 18:17:54
+ * @LastEditTime: 2021-10-04 11:34:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/router.ts
@@ -13,6 +13,7 @@ import ColumnDetail from './views/ColumnDetail.vue'
 import CreatePost from './views/CreatePost.vue'
 import Signup from './views/Signup.vue'
 import store from './store'
+import axios from 'axios'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
@@ -57,15 +58,35 @@ const router = createRouter({
 
 // 添加路由守卫
 router.beforeEach((to, from, next) => {
-  if (!store.state.user.isLogin && to.meta.requiredLogin) {
-    next({
-      name: 'login'
-    })
-  } else if (to.meta.redirectAlreadyLogin && store.state.user.isLogin) {
-    console.log('已经登陆，重定向到首页')
-    next('/')
+  const { user, token } = store.state
+  const { requiredLogin, redirectAlreadyLogin } = to.meta
+  if (!user.isLogin) {
+    if (token) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
+      store.dispatch('fetchCurrentUser').then(() => {
+        if (redirectAlreadyLogin) {
+          next('/')
+        } else {
+          next()
+        }
+      }).catch((e) => {
+        console.error(e)
+        localStorage.removeItem('token')
+        next('login')
+      })
+    } else {
+      if (requiredLogin) {
+        next('login')
+      } else {
+        next()
+      }
+    }
   } else {
-    next()
+    if (redirectAlreadyLogin) {
+      next('/')
+    } else {
+      next()
+    }
   }
 })
 
