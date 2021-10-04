@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-04 12:33:06
+ * @LastEditTime: 2021-10-04 19:32:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -17,7 +17,7 @@ export interface ResponseType<P=Record<string, unknown>> {
 export interface UserProps {
   isLogin: boolean;
   nickName?: string;
-  _id?: number;
+  _id?: string;
   column?: string;
   email?: string;
 }
@@ -26,6 +26,7 @@ export interface ImageProps {
   _id?: string;
   url?: string;
   createdAt?: string;
+  fitUrl?: string;
 }
 
 export interface ColumnProps {
@@ -39,9 +40,10 @@ export interface PostProps {
   title: string;
   excerpt?: string;
   content?: string;
-  image?: ImageProps;
+  image?: ImageProps | string;
   createdAt?: string;
   column: string;
+  author?: string
 }
 
 export interface GlobalErrorProps {
@@ -90,11 +92,9 @@ const store = createStore<GlobalDataProps>({
       state.columns = rawData.data.list
     },
     fetchColumn (state, rawData) {
-      console.log(rawData.data)
       state.columns = [rawData.data]
     },
     fetchPosts (state, rawData) {
-      console.log(rawData.data.list)
       state.posts = rawData.data.list
     },
     setLoading (state, status) {
@@ -134,6 +134,9 @@ const store = createStore<GlobalDataProps>({
     },
     fetchCurrentUser ({ commit }) {
       return getAndCommit('/user/current', 'fetchCurrentUser', commit)
+    },
+    createPost ({ commit }, payload) {
+      return postAndCommit('/posts', 'createPost', commit, payload)
     },
     login ({ commit }, payload) {
       return postAndCommit('/user/login', 'login', commit, payload)
