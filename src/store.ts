@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-05 16:34:21
+ * @LastEditTime: 2021-10-05 17:04:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -96,6 +96,9 @@ const store = createStore<GlobalDataProps>({
     fetchPost (state, rawData) {
       state.posts = [rawData.data]
     },
+    deletePost (state, { data }) {
+      state.posts = state.posts.filter(post => post._id !== data._id)
+    },
     updatePost (state, { data }) {
       state.posts = state.posts.map(post => {
         if (post._id === data._id) {
@@ -151,6 +154,9 @@ const store = createStore<GlobalDataProps>({
     },
     updatePost ({ commit }, { id, payload }) {
       return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, { method: 'patch', data: payload })
+    },
+    deletePost ({ commit }, id) {
+      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, { method: 'delete' })
     },
     login ({ commit }, payload) {
       return asyncAndCommit('/user/login', 'login', commit, { method: 'post', data: payload })
