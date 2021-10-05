@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-27 11:59:41
- * @LastEditTime: 2021-10-05 15:34:21
+ * @LastEditTime: 2021-10-05 16:28:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/CreatePost.vue
 -->
 <template>
   <div class="create-post-page">
-    <h4>新建文章</h4>
+    <h4>{{isEditMode ? '编辑文章' : '新建文章'}}</h4>
     <uploader
       action="/upload"
       :beforeUpload="uploadCheck"
@@ -123,7 +123,12 @@ export default defineComponent({
           if (imageId) {
             newPost.image = imageId
           }
-          store.dispatch('createPost', newPost).then(() => {
+          const actionName = isEditMode ? 'updatePost' : 'createPost'
+          const sendData = isEditMode ? {
+            id: route.query.id,
+            payload: newPost
+          } : newPost
+          store.dispatch(actionName, sendData).then(() => {
             createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
           })
           router.push({
