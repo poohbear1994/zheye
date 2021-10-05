@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-04 23:14:27
+ * @LastEditTime: 2021-10-05 11:57:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -45,7 +45,7 @@ export interface PostProps {
   image?: ImageProps | string;
   createdAt?: string;
   column: string;
-  author?: string
+  author?: string | UserProps
 }
 
 export interface GlobalErrorProps {
