@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-06 16:00:20
+ * @LastEditTime: 2021-10-06 20:05:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -55,20 +55,34 @@ export interface GlobalErrorProps {
   status: boolean;
   message?: string;
 }
+export interface GlobalColumnsProps {
+  data: ListProps<ColumnProps>;
+  loaded: boolean;
+}
+export interface GlobalPostsProps {
+  data: ListProps<PostProps>;
+  loadedColumns: string[];
+  loadedDetails: string[];
+}
 export interface GlobalDataProps {
   error: GlobalErrorProps;
   token: string;
   loading: boolean;
-  columns: ListProps<ColumnProps>;
-  posts: ListProps<PostProps>;
+  columns: GlobalColumnsProps;
+  posts: GlobalPostsProps;
   user: UserProps;
 }
 
-const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, config: AxiosRequestConfig = { method: 'get' }) => {
+const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, config: AxiosRequestConfig = { method: 'get' }, extraData?: any) => {
   const { data } = await axios(url, {
     method: config.method,
     data: config.data
   })
+  if (extraData) {
+    commit(mutationName, { data, extraData })
+  } else {
+    commit(mutationName, data)
+  }
   commit(mutationName, data)
   return data
 }
@@ -78,31 +92,40 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     loading: false,
-    columns: {},
-    posts: {},
+    columns: { data: {}, loaded: false },
+    posts: { data: {}, loadedColumns: [], loadedDetails: [] },
     user: { isLogin: false }
   },
   mutations: {
-    createPost (state, newPost) {
-      state.posts[newPost._id] = newPost
+    createPost (state, { data }) {
+      state.posts.data[data._id] = data
     },
     fetchColumns (state, rawData) {
-      state.columns = arrToObj(rawData.data.list)
+      const { data } = state.columns
+      state.columns = {
+        data: { ...data, ...arrToObj(rawData.data.list) },
+        loaded: true
+      }
     },
-    fetchColumn (state, rawData) {
-      state.columns[rawData.data._id] = rawData.data
+    fetchColumn (state, { data }) {
+      state.columns.data[data._id] = data
     },
-    fetchPosts (state, rawData) {
-      state.posts = arrToObj(rawData.data.list)
+    fetchPosts (state, { data: rawData, extraData }) {
+      const { data, loadedColumns } = state.posts
+      if (rawData.data) {
+        const listData = rawData.data.list as PostProps[]
+        state.posts.data = { ...data, ...arrToObj(listData) }
+      }
+      state.posts.loadedColumns = [...loadedColumns, extraData]
     },
-    fetchPost (state, rawData) {
-      state.posts[rawData.data._id] = rawData.data
+    fetchPost (state, { data }) {
+      state.posts.data[data._id] = data
     },
     deletePost (state, { data }) {
-      delete state.posts[data._id]
+      delete state.posts.data[data._id]
     },
     updatePost (state, { data }) {
-      state.posts[data._id] = data
+      state.posts.data[data._id] = data
     },
     setLoading (state, status) {
       state.loading = status
@@ -130,17 +153,31 @@ const store = createStore<GlobalDataProps>({
     }
   },
   actions: {
-    fetchColumns ({ commit }) {
-      return asyncAndCommit('/columns', 'fetchColumns', commit)
+    fetchColumns ({ commit, state }) {
+      if (!state.columns.loaded) {
+        return asyncAndCommit('/columns', 'fetchColumns', commit)
+      }
     },
-    fetchColumn ({ commit }, cid) {
-      return asyncAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
+    fetchColumn ({ commit, state }, cid) {
+      const cIdArr = Object.keys(state.columns.data)
+      if (!cIdArr.includes(cid)) {
+        return asyncAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
+      }
     },
-    fetchPosts ({ commit }, cid) {
-      return asyncAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+    fetchPosts ({ commit, state }, cid) {
+      const { loadedColumns } = state.posts
+      if (!loadedColumns.includes(cid)) {
+        return asyncAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit, { method: 'get' }, cid)
+      }
     },
-    fetchPost ({ commit }, id) {
-      return asyncAndCommit(`/posts/${id}`, 'fetchPost', commit)
+    fetchPost ({ commit, state }, id) {
+      const { data } = state.posts
+      const certainPost = data[id]
+      if (!certainPost || !certainPost.content) {
+        return asyncAndCommit(`/posts/${id}`, 'fetchPost', commit)
+      } else {
+        return Promise.resolve({ data: certainPost })
+      }
     },
     fetchCurrentUser ({ commit }) {
       return asyncAndCommit('/user/current', 'fetchCurrentUser', commit)
@@ -167,17 +204,16 @@ const store = createStore<GlobalDataProps>({
     }
   },
   getters: {
-    getColumns: (state) => {
-      return objToArr(state.columns)
-    },
     getColumnById: (state) => (id: string) => {
-      return state.columns[id]
+      return state.columns.data[id]
     },
     getPostsByCid: (state) => (cid: string) => {
-      return objToArr(state.posts).filter(post => post.column === cid)
+      return objToArr(state.posts.data).filter(post => post.column === cid).sort((a, b) => {
+        return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+      })
     },
     getCurrentPost: (state) => (id: string) => {
-      return state.posts[id]
+      return state.posts.data[id]
     }
   }
 })
