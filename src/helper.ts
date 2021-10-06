@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-04 13:24:30
- * @LastEditTime: 2021-10-04 23:33:01
+ * @LastEditTime: 2021-10-06 15:26:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/helper.ts
@@ -48,4 +48,17 @@ export function beforeUploadCheck (file: File, condition: CheckCondition) {
     passed: isValidSize && isValidFormat,
     error
   }
+}
+
+export const arrToObj = <T extends { _id?: string }>(arr: Array<T>) => {
+  return arr.reduce((prev, current) => {
+    if (current._id) {
+      prev[current._id] = current
+    }
+    return prev
+  }, {} as { [key: string]: T })
+}
+
+export const objToArr = <V>(obj: { [key: string]: V }) => {
+  return Object.keys(obj).map(key => obj[key])
 }
