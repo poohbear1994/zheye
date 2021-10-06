@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:06
- * @LastEditTime: 2021-10-04 13:07:38
+ * @LastEditTime: 2021-10-06 16:01:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Home.vue
@@ -36,7 +36,7 @@ export default defineComponent({
   },
   setup () {
     const store = useStore<GlobalDataProps>()
-    const list = computed(() => store.state.columns)
+    const list = computed(() => store.getters.getColumns)
     onMounted(() => {
       store.dispatch('fetchColumns')
     })
