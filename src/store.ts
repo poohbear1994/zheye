@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-05 17:04:03
+ * @LastEditTime: 2021-10-06 15:10:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -122,7 +122,7 @@ const store = createStore<GlobalDataProps>({
     },
     logout (state) {
       state.token = ''
-      localStorage.remove('token')
+      localStorage.removeItem('token')
       delete axios.defaults.headers.common.Authorization
       state.user = { isLogin: false }
     },
@@ -160,6 +160,9 @@ const store = createStore<GlobalDataProps>({
     },
     login ({ commit }, payload) {
       return asyncAndCommit('/user/login', 'login', commit, { method: 'post', data: payload })
+    },
+    logout ({ commit }) {
+      commit('logout')
     },
     loginAndFetch ({ dispatch }, loginData) {
       return dispatch('login', loginData).then(() => {

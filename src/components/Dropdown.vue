@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-19 15:12:34
- * @LastEditTime: 2021-09-22 14:06:27
+ * @LastEditTime: 2021-10-06 14:53:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/Dropdown.vue
@@ -17,8 +17,12 @@
   </div>
 </template>
 <script lang='ts'>
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, onUnmounted } from 'vue'
+import mitt from 'mitt'
 import useClickOutside from '@/hooks/useClickOutside'
+
+export const emitter = mitt()
+
 export default defineComponent({
   name: 'Dropdown',
   props: {
@@ -27,12 +31,23 @@ export default defineComponent({
       required: true
     }
   },
-  setup () {
+  emits: ['item-clicked'],
+  setup (props, context) {
     const isOpen = ref(false)
     const dropdownRef = ref<null | HTMLElement>(null)
     const toggleOpen = () => {
       isOpen.value = !isOpen.value
     }
+    const dropDownItemClicked = (e: any) => {
+      if (e.props.closeAfterClick) {
+        isOpen.value = false
+      }
+      context.emit('item-clicked', e)
+    }
+    emitter.on('dropdown-item-clicked', dropDownItemClicked)
+    onUnmounted(() => {
+      emitter.off('dropdown-item-clicked', dropDownItemClicked)
+    })
     const isClickOutside = useClickOutside(dropdownRef)
     watch(isClickOutside, () => {
       if (isOpen.value && isClickOutside.value) {
