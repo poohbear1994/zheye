@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-08 10:21:42
+ * @LastEditTime: 2021-10-08 15:01:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -47,6 +47,7 @@ export interface PostProps {
   createdAt?: string;
   column: string;
   author?: string | UserProps
+  isHTML?: boolean;
 }
 interface ListProps<P> {
   [id: string]: P;
@@ -58,11 +59,11 @@ export interface GlobalErrorProps {
 export interface GlobalColumnsProps {
   data: ListProps<ColumnProps>;
   total: number;
+  currentPage: number;
 }
 export interface GlobalPostsProps {
   data: ListProps<PostProps>;
-  loadedColumns: string[];
-  loadedDetails: string[];
+  loadedColumns: ListProps<{ total?: number; currentPage?: number }>;
 }
 export interface GlobalDataProps {
   error: GlobalErrorProps;
@@ -92,8 +93,8 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     loading: false,
-    columns: { data: {}, total: 0 },
-    posts: { data: {}, loadedColumns: [], loadedDetails: [] },
+    columns: { data: {}, total: 0, currentPage: 0 },
+    posts: { data: {}, loadedColumns: {} },
     user: { isLogin: false }
   },
   mutations: {
@@ -102,10 +103,11 @@ const store = createStore<GlobalDataProps>({
     },
     fetchColumns (state, rawData) {
       const { data } = state.columns
-      const { list, count } = rawData.data
+      const { list, count, currentPage } = rawData.data
       state.columns = {
         data: { ...data, ...arrToObj(list) },
-        total: count
+        total: count,
+        currentPage: currentPage * 1
       }
     },
     fetchColumn (state, { data }) {
@@ -114,10 +116,14 @@ const store = createStore<GlobalDataProps>({
     fetchPosts (state, { data: rawData, extraData }) {
       const { data, loadedColumns } = state.posts
       if (rawData.data) {
-        const listData = rawData.data.list as PostProps[]
+        const { list, count, currentPage } = rawData.data
+        const listData = list as PostProps[]
         state.posts.data = { ...data, ...arrToObj(listData) }
+        loadedColumns[extraData] = {
+          total: count,
+          currentPage: currentPage
+        }
       }
-      state.posts.loadedColumns = [...loadedColumns, extraData]
     },
     fetchPost (state, { data }) {
       state.posts.data[data._id] = data
@@ -155,8 +161,10 @@ const store = createStore<GlobalDataProps>({
   },
   actions: {
     fetchColumns ({ commit, state }, params = {}) {
-      const { currentPage = 1, pageSize = 6 } = params
-      return asyncAndCommit(`/columns?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchColumns', commit)
+      const { currentPage = 1, pageSize = 5 } = params
+      if (state.columns.currentPage < currentPage) {
+        return asyncAndCommit(`/columns?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchColumns', commit)
+      }
     },
     fetchColumn ({ commit, state }, cid) {
       const cIdArr = Object.keys(state.columns.data)
@@ -164,10 +172,14 @@ const store = createStore<GlobalDataProps>({
         return asyncAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
       }
     },
-    fetchPosts ({ commit, state }, cid) {
+    fetchPosts ({ commit, state }, params = {}) {
+      console.log(params)
+      const { cid, currentPage = 1, pageSize = 5 } = params
       const { loadedColumns } = state.posts
-      if (!loadedColumns.includes(cid)) {
-        return asyncAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit, { method: 'get' }, cid)
+      const loadedCurentPage = (loadedColumns[cid] && loadedColumns[cid].currentPage) || 0
+      console.log(`pageSize:${pageSize} loadedCurentPage:${loadedCurentPage},currentPage:${currentPage}`)
+      if (!Object.keys(loadedColumns).includes(cid) || loadedCurentPage < currentPage) {
+        return asyncAndCommit(`/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchPosts', commit, { method: 'get' }, cid)
       }
     },
     fetchPost ({ commit, state }, id) {
@@ -214,6 +226,20 @@ const store = createStore<GlobalDataProps>({
     },
     getCurrentPost: (state) => (id: string) => {
       return state.posts.data[id]
+    },
+    getPostsCountByCid: (state) => (cid: string) => {
+      if (state.posts.loadedColumns[cid]) {
+        return state.posts.loadedColumns[cid].total
+      } else {
+        return 0
+      }
+    },
+    getPostsCurrentPageByCid: (state) => (cid: string) => {
+      if (state.posts.loadedColumns[cid]) {
+        return state.posts.loadedColumns[cid].currentPage
+      } else {
+        return 0
+      }
     }
   }
 })

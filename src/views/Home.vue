@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:06
- * @LastEditTime: 2021-10-08 10:36:21
+ * @LastEditTime: 2021-10-08 14:15:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Home.vue
 -->
 <template>
   <div class="home-page">
-    <section class="py-5 text-center container">
+    <section class="text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <img src="../assets/callout.svg" alt="callout" class="w-50"/>
@@ -19,7 +19,7 @@
         </div>
       </div>
     </section>
-    <h4 class="font-weight-bold text-center">发现精彩</h4>
+    <h4 class="font-weight-bold text-center mb-4">发现精彩</h4>
     <column-list :list="list"></column-list>
     <button
       class="btn d-block btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
@@ -46,11 +46,12 @@ export default defineComponent({
   },
   setup () {
     const store = useStore<GlobalDataProps>()
+    const totalColumns = computed(() => store.state.columns.total || 0)
+    const currentPage = computed(() => store.state.columns.currentPage || 0)
     const list = computed(() => objToArr(store.state.columns.data))
-    const total = computed(() => store.state.columns.total)
-    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', total, { pageSize: 3, currentPage: 2 })
+    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', totalColumns, { currentPage: currentPage.value })
     onMounted(() => {
-      store.dispatch('fetchColumns', { pageSize: 3 })
+      store.dispatch('fetchColumns')
     })
     return {
       list,

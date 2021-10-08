@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 16:07:31
- * @LastEditTime: 2021-10-04 23:16:46
+ * @LastEditTime: 2021-10-08 14:26:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/components/ColumnDetail.vue
@@ -18,6 +18,13 @@
       </div>
     </div>
     <post-list :list="list"></post-list>
+    <button
+      class="btn d-block btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
+      @click="loadMorePage"
+      v-if="!isLastPage"
+    >
+      加载更多
+    </button>
   </div>
 </template>
 
@@ -29,6 +36,7 @@ import { GlobalDataProps, ColumnProps } from '../store'
 import { useStore } from 'vuex'
 import PostList from '../components/PostList.vue'
 import { addColumnAvatar } from '../helper'
+import useLoadMore from '../hooks/useLoadMore'
 
 export default defineComponent({
   name: 'ColumnDetail',
@@ -41,7 +49,7 @@ export default defineComponent({
     const currentId = route.params.id
     onMounted(() => {
       store.dispatch('fetchColumn', currentId)
-      store.dispatch('fetchPosts', currentId)
+      store.dispatch('fetchPosts', { cid: currentId })
     })
     const column = computed(() => {
       const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined
@@ -53,9 +61,14 @@ export default defineComponent({
     const list = computed(() => {
       return store.getters.getPostsByCid(currentId)
     })
+    const count = computed(() => store.getters.getPostsCountByCid(currentId))
+    const currentPage = computed(() => store.getters.getPostsCurrentPageByCid(currentId))
+    const { loadMorePage, isLastPage } = useLoadMore('fetchPosts', count, { currentPage: currentPage.value, cid: currentId })
     return {
       column,
-      list
+      list,
+      loadMorePage,
+      isLastPage
     }
   }
 })

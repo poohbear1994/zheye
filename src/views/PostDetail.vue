@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-04 23:17:54
- * @LastEditTime: 2021-10-05 17:17:42
+ * @LastEditTime: 2021-10-08 14:16:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/PostDetail.vue
@@ -70,7 +70,8 @@ export default defineComponent({
     const currentPost = computed<PostProps>(() => store.getters.getCurrentPost(currentId))
     const currentHTML = computed(() => {
       if (currentPost.value && currentPost.value.content) {
-        return md.render(currentPost.value.content)
+        const { isHTML, content } = currentPost.value
+        return isHTML ? content : md.render(content)
       } else {
         return null
       }
