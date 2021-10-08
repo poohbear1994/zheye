@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-09-24 12:48:06
- * @LastEditTime: 2021-10-06 19:39:44
+ * @LastEditTime: 2021-10-08 10:36:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/views/Home.vue
@@ -21,6 +21,13 @@
     </section>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
+    <button
+      class="btn d-block btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
+      @click="loadMorePage"
+      v-if="!isLastPage"
+    >
+      加载更多
+    </button>
   </div>
 </template>
 
@@ -30,6 +37,8 @@ import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
 import { objToArr } from '../helper'
+import useLoadMore from '../hooks/useLoadMore'
+
 export default defineComponent({
   name: 'Home',
   components: {
@@ -38,11 +47,15 @@ export default defineComponent({
   setup () {
     const store = useStore<GlobalDataProps>()
     const list = computed(() => objToArr(store.state.columns.data))
+    const total = computed(() => store.state.columns.total)
+    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', total, { pageSize: 3, currentPage: 2 })
     onMounted(() => {
-      store.dispatch('fetchColumns')
+      store.dispatch('fetchColumns', { pageSize: 3 })
     })
     return {
-      list
+      list,
+      loadMorePage,
+      isLastPage
     }
   }
 })

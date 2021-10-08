@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 13:44:35
- * @LastEditTime: 2021-10-06 20:05:05
+ * @LastEditTime: 2021-10-08 10:21:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /zheye/src/store.ts
@@ -57,7 +57,7 @@ export interface GlobalErrorProps {
 }
 export interface GlobalColumnsProps {
   data: ListProps<ColumnProps>;
-  loaded: boolean;
+  total: number;
 }
 export interface GlobalPostsProps {
   data: ListProps<PostProps>;
@@ -92,7 +92,7 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     loading: false,
-    columns: { data: {}, loaded: false },
+    columns: { data: {}, total: 0 },
     posts: { data: {}, loadedColumns: [], loadedDetails: [] },
     user: { isLogin: false }
   },
@@ -102,9 +102,10 @@ const store = createStore<GlobalDataProps>({
     },
     fetchColumns (state, rawData) {
       const { data } = state.columns
+      const { list, count } = rawData.data
       state.columns = {
-        data: { ...data, ...arrToObj(rawData.data.list) },
-        loaded: true
+        data: { ...data, ...arrToObj(list) },
+        total: count
       }
     },
     fetchColumn (state, { data }) {
@@ -153,10 +154,9 @@ const store = createStore<GlobalDataProps>({
     }
   },
   actions: {
-    fetchColumns ({ commit, state }) {
-      if (!state.columns.loaded) {
-        return asyncAndCommit('/columns', 'fetchColumns', commit)
-      }
+    fetchColumns ({ commit, state }, params = {}) {
+      const { currentPage = 1, pageSize = 6 } = params
+      return asyncAndCommit(`/columns?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchColumns', commit)
     },
     fetchColumn ({ commit, state }, cid) {
       const cIdArr = Object.keys(state.columns.data)
